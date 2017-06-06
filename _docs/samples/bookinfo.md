@@ -49,12 +49,6 @@ This application is polyglot, i.e., the microservices are written in different l
 
 1. Change directory to the root of the Istio installation directory.
 
-1. Source the Istio configuration file:
-
-   ```bash
-   source istio.VERSION
-   ```
-
 1. Bring up the application containers:
 
    ```bash
@@ -62,7 +56,7 @@ This application is polyglot, i.e., the microservices are written in different l
    ```
 
    The above command launches four microservices and creates the gateway
-   ingress resource as illustrated in the diagram above.
+   ingress resource as illustrated in the diagram below.
    The reviews microservice has 3 versions: v1, v2, and v3.
 
    > Note that in a realistic deployment, new versions of a microservice are deployed
@@ -150,13 +144,13 @@ This application is polyglot, i.e., the microservices are written in different l
    In this case you can use the service NodePort instead:
    
    ```bash
-   export GATEWAY_URL=$(kubectl get po -l istio=ingress -o jsonpath={.items[0].status.hostIP}):$(kubectl get svc istio-ingress -o jsonpath={.spec.ports[0].nodePort})
+   export GATEWAY_URL=$(kubectl get po -l istio=ingress -o 'jsonpath={.items[0].status.hostIP}'):$(kubectl get svc istio-ingress -o 'jsonpath={.spec.ports[0].nodePort}')
    ```
 
 1. Confirm that the BookInfo application is running with the following `curl` command:
 
    ```bash
-   curl -o /dev/null -s -w "%{http_code}\n" http://$GATEWAY_URL/productpage
+   curl -o /dev/null -s -w "%{http_code}\n" http://${GATEWAY_URL}/productpage
    ```
    ```bash
    200

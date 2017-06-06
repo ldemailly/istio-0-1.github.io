@@ -32,57 +32,12 @@ as the example application throughout this task.
 
 ## Collecting new telemetry data
 
-1. Create a new YAML file (`new_rule.yml`) to hold configuration for
+1. Create a new YAML file to hold configuration for
    the new metric and log stream that Istio will generate and collect
    automatically.
 
-   ```bash
-   cat <<EOF >new_rule.yml
-   revision: "1"
-   rules:
-   - aspects:
-     - adapter: prometheus
-       kind: metrics
-       params:
-         metrics:
-         - descriptor_name: response_size
-           value: response.size | 0
-           labels:
-             source: source.labels["app"] | "unknown"
-             target: target.service | "unknown"
-             service: target.labels["app"] | "unknown"
-             method: request.path | "unknown"
-             response_code: response.code | 200
-     - adapter: default
-       kind: access-logs
-       params:
-         logName: combined_log
-         log:
-           descriptor_name: accesslog.combined
-           template_expressions:
-             originIp: origin.ip
-             sourceUser: origin.user
-             timestamp: request.time
-             method: request.method
-             url: request.path
-             protocol: request.scheme
-             responseCode: response.code
-             responseSize: response.size
-             referer: request.referer
-             userAgent: request.headers["user-agent"]
-           labels:
-             originIp: origin.ip
-             sourceUser: origin.user
-             timestamp: request.time
-             method: request.method
-             url: request.path
-             protocol: request.scheme
-             responseCode: response.code
-             responseSize: response.size
-             referer: request.referer
-             userAgent: request.headers["user-agent"]
-   EOF
-   ```
+   Save the following as `new_rule.yaml`:
+   <pre data-src="{{home}}/repos/istio/samples/apps/bookinfo/mixer-rule-additional-telemetry.yaml"></pre>
 
 1. Pick a target service for the new rule.
 
@@ -102,14 +57,14 @@ as the example application throughout this task.
    Error: the server could not find the requested resource
    ```
 
-   If your selected service has service-specific rules, update `new_rule.yml`
-   to include the existing rules appropriately. Append the rule from `new_rule.yml`
-   to the existing `rules` block and save the updated content back over `new_rule.yml`.
+   If your selected service has service-specific rules, update `new_rule.yaml`
+   to include the existing rules appropriately. Append the rule from `new_rule.yaml`
+   to the existing `rules` block and save the updated content back over `new_rule.yaml`.
 
 1. Push the new configuration to Mixer for a specific service.
 
    ```bash
-   istioctl mixer rule create reviews.default.svc.cluster.local reviews.default.svc.cluster.local -f new_rule.yml
+   istioctl mixer rule create reviews.default.svc.cluster.local reviews.default.svc.cluster.local -f new_rule.yaml
    ```
 
 1. Send traffic to that service.
@@ -136,12 +91,13 @@ as the example application throughout this task.
      kubectl get service grafana
      ```
 
-   At the bottom of the dashboard, there is a row of graphs with titles containing the words "Response Size".
-   These graphs display percentile breakdowns of the distribution of Response Sizes.
+   One of the rows in the dashboard will be named "reviews". If that row is not visible, please refresh the dashboard page. The "reviews" row
+   contains a graph entitled "Response Size by Source And Version". The graph displays a breakdown of the distribution of Response Sizes returned
+   by the "reviews" service.
 
    The request from the previous step is reflected in the graphs. This looks similar to:
-   <figure><img style="max-width: 100%;" src="./img/dashboard_response_size.png" alt="Istio Dashboard with Response Size Data" title="Istio Dashboard with Response Size Data" />
-   <figcaption>Istio Dashboard with Response Size Data</figcaption></figure>
+   <figure><img style="max-width: 100%;" src="./img/dashboard_response_size.png" alt="Istio Dashboard for Reviews Service" title="Istio Dashboard for Reviews Service" />
+   <figcaption>Istio Dashboard for Reviews Service</figcaption></figure>
 
 1. Verify that the logs stream has been created and is being populated
    for requests.
@@ -188,7 +144,7 @@ was added, in case Envoy does not report the values as expected.
 
 A set of dimensions were also configured for the metric value, via the
 `labels` chunks of configuration. For the new metric, the dimensions
-were `source`, `target`, `service`, `method`, and `response_code`.
+were `source`, `target`, `service`, `version`, `method`, and `response_code`.
 
 Dimensions provide a way to slice, aggregate, and analyze metric data
 according to different needs and directions of inquiry. For instance, it

@@ -132,7 +132,7 @@ This configures an adapter that reports data to the Prometheus system. This adap
 require any custom parameters and so doesn't have a `params` stanza.
 
 Each adapter defines its own particular format of configuration data. The exhaustive set of
-adapters and their specific configuration format can be found in *TBD*.
+adapters and their specific configuration formats can be found [here]({{home}}/docs/reference/config/mixer/adapters/index.html).
 
 ### Aspects
 
@@ -211,7 +211,7 @@ the kind of metric this is. The `value` field and the four label fields describe
 at request time in order to produce the metric.
 
 Each aspect kind defines its own particular format of configuration data. The exhaustive set of
-aspect configuration formats can be found in *TBD*.
+aspect configuration formats can be found [here]({{home}}/docs/reference/config/mixer/aspects/index.html)..
     
 #### Attribute expressions
 
@@ -251,17 +251,7 @@ a particular label is of type INT64, then only attribute expressions that produc
 64-bit integer can be used to fill-in that label. This is the case for the `responseCode`
 label above.
 
-Attribute expressions include the following features:
-
-1. Check attributes for equality against constants
-2. Check string attributes for wildcard matches
-3. Logical AND/OR/NOT operators
-4. Grouping semantics
-5. String Concatenation
-6. Substring Production
-7. Comparison (<, <=, ==, >=, >)
-
-Refer to *TBD* for the full attribute expression syntax.
+Refer to the [attribute expression reference]({{home}}/docs/reference/config/mixer/expression-language.html) for details.
 
 #### Selectors
 
@@ -347,7 +337,7 @@ that conform to the descriptor's shape (it's value type and its set of labels).
 
 - It enables Istio to provide a strongly-typed scripting environment as discussed [here](./mixer.html#scripting)
 
-The different descriptor types are detailed in *TBD*
+The different descriptor types are detailed in [here]({{home}}/docs/reference/config/mixer/mixer-config.html).
 
 ### Scopes
 
